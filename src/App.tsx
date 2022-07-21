@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 import { Todo } from "./model";
 
 const App: React.FC = () => {
+  const getData = () => {
+    // @ts-ignore
+    let todos1 = JSON.parse(localStorage.getItem("todos")) || [];
+    return todos1;
+  };
   const [todo, setTodo] = useState<string>("");
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(getData());
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
     if (todo) {
@@ -14,7 +19,9 @@ const App: React.FC = () => {
       setTodo("");
     }
   };
-  console.log(todos);
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
   return (
     <div className="App">
       <span className="heading">Taskify</span>
